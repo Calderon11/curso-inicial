@@ -1,2 +1,22 @@
 <h1>Regresar a Inicio</h1>
-<p-button label="Regresar" icon="pi pi-arrow-left" iconPos="right" (onClick="regresarInicio()"></p-button>
+
+<p-table [value]="listEmpleado" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>ID</th>
+            <th>NOMBRE EMPLEADO</th>
+            <th>SALARIO EMPLEADO</th>
+            <th>EDAD</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-empleado>
+        <tr>
+            <td>{{ empleado.id }}</td>
+            <td>{{ empleado.employee_name }}</td>
+            <td>{{ empleado.employee_salary }}</td>
+            <td>{{ empleado.employee_age }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-button label="Regresar" icon="pi pi-arrow-left" iconPos="right" (onClick)="regresarInicio()"></p-button>
