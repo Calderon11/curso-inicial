@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
 import { IDataEmpleado } from 'src/app/interfaces/empleadosInterface';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-pagina-tabla',
@@ -13,34 +13,31 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 export class PaginaTablaComponent implements OnInit {
   listEmpleado: IDataEmpleado[] = [];
   columnTabla: any;
-  listMenu: MenuItem[] = [];
-  activeItem!: MenuItem;
+  loading = false;
+
   constructor(private rutas: Router,
-              private empleadoService: EmpleadoService){
+              private empleadoService: EmpleadoService,
+              private mensajes: MessageService){
   }
 
   ngOnInit(): void {
     ///Es lo primero q se ejecuta.
-    this.iniColumnaTabla();
-    this.inicioMenu();
+    this.iniColumnaTabla(); 
     console.log('Hola estoy aqui desde ngOnInit');
-    // this.empleadoService.getAllEmployee().subscribe(
-    //   (datos) => {
-    //     console.log(datos);
-    //     this.listEmpleado = datos.data;
-    //   }, (error) => {
-    //     console.log(error);
-    //   }
-    // );
+    this.loading = true;
 
     this.empleadoService.getAllEmployee().subscribe(
       {
         next: (datos) => {
           console.log(datos);
           this.listEmpleado = datos.data;
+          this.loading = false;
+          this.mensajes.add({ severity: 'success', summary: 'Satisfactorio', detail: 'Exito' });
         },
         error: (err) => {
           console.log(err);
+          this.loading = false;
+          this.mensajes.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema' });
         }
       }      
     );
@@ -64,17 +61,7 @@ export class PaginaTablaComponent implements OnInit {
     ];
   }
 
-  inicioMenu(){
-    this.listMenu = [
-     {
-      label: 'cliente'
-     },
-     {
-      label: 'Empresa'
-     }
-    ];
-    this.activeItem = this.listMenu[0];
-  }
+
 
   regresarInicio(){
     this.rutas.navigate(['inicio']);
